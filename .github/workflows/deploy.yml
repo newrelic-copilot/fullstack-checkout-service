@@ -1,0 +1,17 @@
+name: Deploy and Track
+'on':
+  push:
+    branches: [ main ]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Deploy application
+        run: echo "Add your deployment commands here"
+      - name: Record deployment
+        uses: newrelic/deployment-marker-action@v2.3.0
+        with:
+          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
+          guid: ${{ secrets.NEW_RELIC_ENTITY_GUID }}
+          version: ${{ github.sha }}
