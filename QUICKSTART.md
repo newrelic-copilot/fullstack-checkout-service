@@ -19,6 +19,21 @@ You should see:
 INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
 
+## Step 2.5: (Optional) Enable New Relic Monitoring
+
+Want to monitor your application's performance? Enable New Relic in 30 seconds:
+
+```bash
+# Set your New Relic credentials
+export NEW_RELIC_LICENSE_KEY="your_license_key_here"
+export NEW_RELIC_APP_NAME="fullstack-checkout-service"
+
+# Restart the server (Ctrl+C then run again)
+python main.py
+```
+
+Get your free license key at [newrelic.com](https://newrelic.com). Data will appear in the New Relic dashboard within 5 minutes!
+
 ## Step 3: Open the Application
 
 Open your web browser and navigate to:
