@@ -1,3 +1,13 @@
+# Initialize New Relic agent (must be first import)
+import os
+try:
+    if os.environ.get('NEW_RELIC_LICENSE_KEY'):
+        import newrelic.agent
+        newrelic.agent.initialize('newrelic.ini')
+except ImportError:
+    # New Relic not installed, continue without monitoring
+    pass
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
