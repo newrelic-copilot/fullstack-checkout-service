@@ -51,6 +51,33 @@ cd fullstack-checkout-service
 pip install -r requirements.txt
 ```
 
+3. Configure New Relic monitoring (optional):
+
+Copy the `.env.example` file to `.env` and add your New Relic license key:
+```bash
+cp .env.example .env
+```
+
+Edit `.env` and set your New Relic license key:
+```bash
+NEW_RELIC_LICENSE_KEY=your_license_key_here
+NEW_RELIC_APP_NAME=Fullstack Checkout Service
+```
+
+You can obtain a New Relic license key from: https://one.newrelic.com/launcher/api-keys-ui.api-keys-launcher
+
+Load environment variables from `.env` file before running the application:
+```bash
+export $(cat .env | xargs)
+```
+
+Alternatively, you can run the application with New Relic admin wrapper:
+```bash
+NEW_RELIC_CONFIG_FILE=newrelic.ini newrelic-admin run-program python main.py
+```
+
+For more information about New Relic configuration, see the [New Relic Python Agent documentation](https://docs.newrelic.com/docs/apm/agents/python-agent/getting-started/introduction-new-relic-python/).
+
 ## Running the Application
 
 Start the FastAPI server:
@@ -111,6 +138,8 @@ fullstack-checkout-service/
 ├── models.py            # Pydantic models for data validation
 ├── demo_data.py         # Demo product catalog
 ├── requirements.txt     # Python dependencies
+├── newrelic.ini         # New Relic configuration file
+├── .env.example         # Environment variables template
 ├── static/              # Frontend files
 │   ├── index.html      # Main HTML page
 │   ├── style.css       # Styles
@@ -124,6 +153,7 @@ fullstack-checkout-service/
 - **FastAPI**: Modern, fast web framework for building APIs
 - **Pydantic**: Data validation using Python type annotations
 - **Uvicorn**: ASGI server for running the application
+- **New Relic**: Application performance monitoring and observability
 
 ### Frontend
 - **HTML5**: Semantic markup
@@ -144,6 +174,57 @@ Use the built-in Swagger UI documentation at http://localhost:8000/docs to test 
 - Modify `demo_data.py` to change or add products
 - Update `models.py` to add new fields or validation rules
 - Customize the UI by editing files in the `static/` directory
+
+## New Relic Monitoring
+
+This application is instrumented with New Relic APM for performance monitoring and observability.
+
+### Features Enabled
+
+- **Application Performance Monitoring (APM)**: Track response times, throughput, and errors
+- **Distributed Tracing**: Follow requests across services and components
+- **Error Tracking**: Automatic capture and reporting of exceptions
+- **Transaction Tracing**: Detailed insights into slow transactions
+- **Logs in Context**: Application logs correlated with traces and errors
+
+### Configuration
+
+New Relic can be configured in three ways:
+
+1. **Environment Variables** (recommended for production):
+   ```bash
+   export NEW_RELIC_LICENSE_KEY=your_license_key_here
+   export NEW_RELIC_APP_NAME="Fullstack Checkout Service"
+   python main.py
+   ```
+
+2. **Configuration File** (`newrelic.ini`):
+   The application includes a pre-configured `newrelic.ini` file. Update the `license_key` field with your New Relic license key.
+
+3. **Using newrelic-admin wrapper**:
+   ```bash
+   newrelic-admin run-program python main.py
+   ```
+
+### Monitoring Dashboard
+
+Once configured, you can view your application's performance metrics at:
+- https://one.newrelic.com
+
+### Custom Instrumentation
+
+To add custom instrumentation to specific functions, you can use the New Relic Python agent decorators:
+
+```python
+import newrelic.agent
+
+@newrelic.agent.function_trace()
+def my_custom_function():
+    # Your code here
+    pass
+```
+
+For more details, see the [New Relic Python Agent documentation](https://docs.newrelic.com/docs/apm/agents/python-agent/).
 
 ## License
 

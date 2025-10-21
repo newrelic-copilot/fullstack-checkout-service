@@ -1,3 +1,12 @@
+import newrelic.agent
+
+# Initialize New Relic agent
+# Configuration can be provided via newrelic.ini file or environment variables:
+# - NEW_RELIC_CONFIG_FILE: path to newrelic.ini (default: ./newrelic.ini)
+# - NEW_RELIC_LICENSE_KEY: your New Relic license key
+# - NEW_RELIC_APP_NAME: application name (default: from newrelic.ini)
+newrelic.agent.initialize()
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
