@@ -37,6 +37,7 @@ The application comes with 8 pre-loaded demo products:
 ### Prerequisites
 - Python 3.8 or higher
 - pip (Python package manager)
+- (Optional) New Relic account for monitoring
 
 ### Setup
 
@@ -50,6 +51,21 @@ cd fullstack-checkout-service
 ```bash
 pip install -r requirements.txt
 ```
+
+3. (Optional) Configure New Relic monitoring:
+   - Copy `.env.example` to `.env`:
+     ```bash
+     cp .env.example .env
+     ```
+   - Edit `.env` and add your New Relic credentials:
+     ```bash
+     NEW_RELIC_LICENSE_KEY=your_license_key_here
+     NEW_RELIC_APP_NAME=fullstack-checkout-service
+     ```
+   - Load environment variables:
+     ```bash
+     export $(cat .env | xargs)
+     ```
 
 ## Running the Application
 
@@ -124,6 +140,7 @@ fullstack-checkout-service/
 - **FastAPI**: Modern, fast web framework for building APIs
 - **Pydantic**: Data validation using Python type annotations
 - **Uvicorn**: ASGI server for running the application
+- **New Relic**: Application Performance Monitoring (APM) and observability
 
 ### Frontend
 - **HTML5**: Semantic markup
@@ -144,6 +161,54 @@ Use the built-in Swagger UI documentation at http://localhost:8000/docs to test 
 - Modify `demo_data.py` to change or add products
 - Update `models.py` to add new fields or validation rules
 - Customize the UI by editing files in the `static/` directory
+
+## New Relic Monitoring
+
+This application includes built-in support for New Relic APM (Application Performance Monitoring). When configured, it provides:
+
+- **Real-time Performance Metrics**: Monitor response times, throughput, and error rates
+- **Distributed Tracing**: Track requests across your entire system
+- **Error Analytics**: Automatic error tracking and reporting
+- **Transaction Tracing**: Deep visibility into slow transactions
+- **Custom Instrumentation**: Built-in instrumentation for FastAPI endpoints
+
+### Setup New Relic
+
+1. **Get New Relic License Key**:
+   - Sign up for a free account at [newrelic.com](https://newrelic.com)
+   - Navigate to Account Settings to find your license key
+
+2. **Configure Environment Variables**:
+   ```bash
+   export NEW_RELIC_LICENSE_KEY="your_license_key_here"
+   export NEW_RELIC_APP_NAME="fullstack-checkout-service"
+   ```
+
+3. **Run the Application**:
+   ```bash
+   python main.py
+   ```
+
+4. **Verify in New Relic**:
+   - Visit [one.newrelic.com](https://one.newrelic.com)
+   - Navigate to APM & Services
+   - Look for "fullstack-checkout-service" (or your configured app name)
+   - Data should appear within 5 minutes of starting the application
+
+### Configuration Options
+
+The New Relic agent is configured via `newrelic.ini`. Key settings include:
+
+- **Distributed Tracing**: Enabled by default
+- **Transaction Tracing**: Captures slow transactions
+- **Error Collection**: Automatic error reporting
+- **SQL Obfuscation**: Enabled for security
+
+To customize, edit `newrelic.ini` or see the [New Relic Python Agent documentation](https://docs.newrelic.com/docs/agents/python-agent).
+
+### Running Without New Relic
+
+The application gracefully handles missing New Relic configuration. If `NEW_RELIC_LICENSE_KEY` is not set, the app runs normally without monitoring.
 
 ## License
 
