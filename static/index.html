@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Checkout Service - Shop</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🛒 Checkout Service</h1>
+            <div class="cart-icon" onclick="toggleCart()">
+                <span>🛍️</span>
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Product Catalog -->
+        <section id="products-section">
+            <h2>Products</h2>
+            <div id="productsGrid" class="products-grid">
+                <!-- Products will be loaded here -->
+            </div>
+        </section>
+
+        <!-- Shopping Cart Sidebar -->
+        <div id="cartSidebar" class="cart-sidebar">
+            <div class="cart-header">
+                <h2>Shopping Cart</h2>
+                <button class="close-btn" onclick="toggleCart()">✕</button>
+            </div>
+            <div id="cartItems" class="cart-items">
+                <!-- Cart items will be shown here -->
+            </div>
+            <div class="cart-footer">
+                <div class="cart-total">
+                    <strong>Total:</strong>
+                    <strong id="cartTotal">$0.00</strong>
+                </div>
+                <button class="btn btn-primary" onclick="showCheckoutForm()" id="checkoutBtn">
+                    Proceed to Checkout
+                </button>
+            </div>
+        </div>
+
+        <!-- Checkout Form -->
+        <div id="checkoutModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>Checkout</h2>
+                    <button class="close-btn" onclick="closeCheckoutForm()">✕</button>
+                </div>
+                <form id="checkoutForm" onsubmit="submitCheckout(event)">
+                    <div class="form-group">
+                        <label for="customerName">Full Name *</label>
+                        <input type="text" id="customerName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="customerEmail">Email *</label>
+                        <input type="email" id="customerEmail" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="shippingAddress">Shipping Address *</label>
+                        <textarea id="shippingAddress" rows="3" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="paymentMethod">Payment Method *</label>
+                        <select id="paymentMethod" required>
+                            <option value="">Select payment method</option>
+                            <option value="credit_card">Credit Card</option>
+                            <option value="debit_card">Debit Card</option>
+                            <option value="paypal">PayPal</option>
+                            <option value="cash_on_delivery">Cash on Delivery</option>
+                        </select>
+                    </div>
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeCheckoutForm()">
+                            Cancel
+                        </button>
+                        <button type="submit" class="btn btn-primary">
+                            Place Order
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Order Confirmation Modal -->
+        <div id="confirmationModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header success">
+                    <h2>✓ Order Confirmed!</h2>
+                </div>
+                <div id="orderDetails" class="order-details">
+                    <!-- Order details will be shown here -->
+                </div>
+                <div class="form-actions">
+                    <button class="btn btn-primary" onclick="closeConfirmation()">
+                        Continue Shopping
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>&copy; 2025 Checkout Service. Demo application built with FastAPI.</p>
+        </div>
+    </footer>
+
+    <script src="/static/app.js"></script>
+</body>
+</html>
