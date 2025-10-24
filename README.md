@@ -130,6 +130,47 @@ fullstack-checkout-service/
 - **CSS3**: Modern styling with flexbox and grid
 - **Vanilla JavaScript**: No framework dependencies
 - **Fetch API**: For making HTTP requests
+- **New Relic Browser**: Real-time browser performance monitoring and error tracking
+
+## Observability
+
+### New Relic Browser Monitoring
+
+This application includes New Relic Browser monitoring for tracking frontend performance and user experience.
+
+#### Configuration
+
+To enable New Relic Browser monitoring, you need to configure the following values in `static/index.html`:
+
+1. **accountID**: Your New Relic account ID
+2. **trustKey**: Your New Relic trust key
+3. **agentID**: Your New Relic agent ID
+4. **licenseKey**: Your New Relic license key
+5. **applicationID**: Your New Relic application ID
+
+Replace the placeholder values in the Browser agent script:
+- `YOUR_ACCOUNT_ID`
+- `YOUR_TRUST_KEY`
+- `YOUR_AGENT_ID`
+- `YOUR_LICENSE_KEY`
+- `YOUR_APPLICATION_ID`
+
+#### Getting Your New Relic Credentials
+
+1. Log in to your New Relic account at https://one.newrelic.com
+2. Navigate to **Browser** → **Add a new app**
+3. Select **Copy/Paste JavaScript code**
+4. Copy the configuration values from the generated script
+5. Update the values in `static/index.html`
+
+#### Features Monitored
+
+- **Page Load Performance**: Initial page load times and resource loading
+- **User Interactions**: Click events, form submissions, and navigation
+- **AJAX Requests**: API calls to `/api/products` and `/api/checkout`
+- **JavaScript Errors**: Frontend errors and exceptions
+- **Session Traces**: Detailed user session recordings
+- **Core Web Vitals**: LCP, FID, CLS metrics
 
 ## Development
 
