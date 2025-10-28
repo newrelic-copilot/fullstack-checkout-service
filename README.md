@@ -231,6 +231,9 @@ python main.py
 
 # In another terminal, run the test script
 python test_newrelic.py
+
+# Or run in non-interactive mode (useful for CI/CD)
+python test_newrelic.py --no-interactive
 ```
 
 The test script will:

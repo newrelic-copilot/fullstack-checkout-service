@@ -5,7 +5,7 @@ This script makes several API calls to generate transactions in New Relic.
 """
 import requests
 import time
-import json
+import sys
 
 BASE_URL = "http://localhost:8000"
 
@@ -106,8 +106,10 @@ def test_error_handling():
         response = requests.get(f"{BASE_URL}/api/products/999")
         if response.status_code == 404:
             print("✓ 404 Error properly handled (Product not found)")
-    except requests.exceptions.RequestException:
-        pass
+        else:
+            print(f"✗ Expected 404, got {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"✗ Request failed: {e}")
     
     # Test 400 - Empty cart
     try:
@@ -123,8 +125,10 @@ def test_error_handling():
         )
         if response.status_code == 400:
             print("✓ 400 Error properly handled (Empty cart)")
-    except requests.exceptions.RequestException:
-        pass
+        else:
+            print(f"✗ Expected 400, got {response.status_code}")
+    except requests.exceptions.RequestException as e:
+        print(f"✗ Request failed: {e}")
 
 def main():
     print("\n" + "="*60)
@@ -136,7 +140,12 @@ def main():
     print("\nMake sure the application is running on http://localhost:8000")
     print("and New Relic is configured with your license key.")
     
-    input("\nPress Enter to start the tests...")
+    # Support non-interactive mode via command line argument
+    if "--no-interactive" not in sys.argv:
+        input("\nPress Enter to start the tests...")
+    else:
+        print("\nRunning in non-interactive mode...")
+        time.sleep(1)
     
     # Test 1: Get all products
     products = test_get_products()
