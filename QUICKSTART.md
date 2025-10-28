@@ -8,6 +8,22 @@ Get started with the Checkout Service in 3 simple steps!
 pip install -r requirements.txt
 ```
 
+## Step 1.5: Configure New Relic (Optional)
+
+For application monitoring with New Relic:
+
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit .env and add your New Relic license key
+# NEW_RELIC_LICENSE_KEY=your_license_key_here
+```
+
+Get your license key from [New Relic API Keys](https://one.newrelic.com/api-keys).
+
+**Note:** The application works without New Relic configuration, but you'll miss out on monitoring features.
+
 ## Step 2: Start the Server
 
 ```bash

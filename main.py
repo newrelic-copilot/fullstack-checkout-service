@@ -1,3 +1,15 @@
+import os
+
+# Initialize New Relic APM agent first (must be before other imports)
+try:
+    import newrelic.agent
+    config_file = os.getenv('NEW_RELIC_CONFIG_FILE', 'newrelic.ini')
+    environment = os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
+    newrelic.agent.initialize(config_file, environment)
+except Exception as e:
+    # If New Relic is not configured or fails to initialize, continue without it
+    print(f"Warning: New Relic agent initialization failed: {e}")
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -14,6 +26,12 @@ app = FastAPI(
     description="A simple checkout service with product catalog and order management",
     version="1.0.0"
 )
+
+# Wrap the FastAPI app with New Relic ASGI middleware
+try:
+    app = newrelic.agent.ASGIApplicationWrapper(app)
+except Exception as e:
+    print(f"Warning: Failed to apply New Relic ASGI wrapper: {e}")
 
 # Add CORS middleware
 app.add_middleware(
