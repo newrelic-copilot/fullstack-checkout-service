@@ -19,6 +19,9 @@ A full-stack checkout service application built with Python FastAPI backend and 
 - Order confirmation display
 - Modern UI with gradient themes
 - Mobile-friendly design
+- **New Relic Browser monitoring with Real User Monitoring (RUM)**
+- Custom event tracking for e-commerce analytics
+- JavaScript error tracking and performance monitoring
 
 ## Demo Products
 
@@ -130,6 +133,15 @@ fullstack-checkout-service/
 - **CSS3**: Modern styling with flexbox and grid
 - **Vanilla JavaScript**: No framework dependencies
 - **Fetch API**: For making HTTP requests
+- **New Relic Browser**: Real User Monitoring and performance tracking
+
+### Monitoring
+- **New Relic Browser Agent**: Frontend performance and error monitoring
+- **Custom Events**: E-commerce analytics (cart, checkout, orders)
+- **Session Tracking**: User journey analysis
+- **Error Tracking**: JavaScript errors and API failures
+
+See [NEW_RELIC_BROWSER_SETUP.md](NEW_RELIC_BROWSER_SETUP.md) for detailed setup instructions.
 
 ## Development
 
