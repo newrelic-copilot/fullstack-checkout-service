@@ -221,6 +221,26 @@ After starting the application with New Relic configured:
    - **Distributed tracing**: Request flows
    - **Logs**: Application logs in context
 
+### Testing the Integration
+
+A test script is provided to generate sample transactions in New Relic:
+
+```bash
+# Make sure the application is running first
+python main.py
+
+# In another terminal, run the test script
+python test_newrelic.py
+```
+
+The test script will:
+- Make API calls to all endpoints
+- Generate successful transactions
+- Trigger error conditions (404, 400)
+- Display results in the console
+
+After running the test, check your New Relic dashboard to see the captured transactions.
+
 ### Monitored Endpoints
 
 All API endpoints are automatically instrumented:
