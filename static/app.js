@@ -5,20 +5,83 @@ const API_URL = window.location.origin;
 let cart = [];
 let products = [];
 
+// New Relic helper functions
+function trackNewRelicEvent(eventType, attributes = {}) {
+    if (window.newrelic && window.newrelic.addPageAction) {
+        window.newrelic.addPageAction(eventType, attributes);
+    } else {
+        console.log('[New Relic Mock]', eventType, attributes);
+    }
+}
+
+function setNewRelicAttribute(name, value) {
+    if (window.newrelic && window.newrelic.setCustomAttribute) {
+        window.newrelic.setCustomAttribute(name, value);
+    }
+}
+
+function trackNewRelicError(error, customAttributes = {}) {
+    if (window.newrelic && window.newrelic.noticeError) {
+        window.newrelic.noticeError(error, customAttributes);
+    } else {
+        console.error('[New Relic Mock Error]', error, customAttributes);
+    }
+}
+
 // Initialize the app
 async function init() {
+    // Set session-level custom attributes
+    setNewRelicAttribute('userSessionId', generateSessionId());
+    setNewRelicAttribute('pageType', 'shop');
+    
+    // Track page view
+    trackNewRelicEvent('PageView', {
+        pageName: 'Shop',
+        pageUrl: window.location.href
+    });
+    
     await loadProducts();
     updateCartUI();
 }
 
+// Generate a simple session ID
+function generateSessionId() {
+    let sessionId = sessionStorage.getItem('userSessionId');
+    if (!sessionId) {
+        sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        sessionStorage.setItem('userSessionId', sessionId);
+    }
+    return sessionId;
+}
+
 // Load products from API
 async function loadProducts() {
+    const startTime = Date.now();
+    
     try {
         const response = await fetch(`${API_URL}/api/products`);
+        
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
         products = await response.json();
         displayProducts(products);
+        
+        // Track successful product load
+        trackNewRelicEvent('ProductsLoaded', {
+            productCount: products.length,
+            loadTime: Date.now() - startTime
+        });
     } catch (error) {
         console.error('Error loading products:', error);
+        
+        // Track error to New Relic
+        trackNewRelicError(error, {
+            errorType: 'ProductLoadError',
+            endpoint: '/api/products'
+        });
+        
         alert('Failed to load products. Please try again.');
     }
 }
@@ -73,12 +136,36 @@ function addToCart(productId) {
     
     updateCartUI();
     
+    // Calculate cart value
+    const cartValue = calculateCartTotal();
+    
+    // Track add to cart event in New Relic
+    trackNewRelicEvent('AddToCart', {
+        productId: productId,
+        productName: product.name,
+        productPrice: product.price,
+        quantity: existingItem ? existingItem.quantity : 1,
+        cartValue: cartValue,
+        cartItemCount: cart.length
+    });
+    
+    // Update custom attribute with current cart value
+    setNewRelicAttribute('cartValue', cartValue);
+    
     // Show a brief animation
     const cartIcon = document.querySelector('.cart-icon');
     cartIcon.style.animation = 'none';
     setTimeout(() => {
         cartIcon.style.animation = 'bounce 0.5s';
     }, 10);
+}
+
+// Helper function to calculate cart total
+function calculateCartTotal() {
+    return cart.reduce((total, item) => {
+        const product = products.find(p => p.id === item.product_id);
+        return total + (product ? product.price * item.quantity : 0);
+    }, 0);
 }
 
 // Update cart quantity
@@ -92,8 +179,18 @@ function updateQuantity(productId, delta) {
     if (newQuantity <= 0) {
         removeFromCart(productId);
     } else if (newQuantity <= product.stock) {
+        const oldQuantity = item.quantity;
         item.quantity = newQuantity;
         updateCartUI();
+        
+        // Track quantity update
+        trackNewRelicEvent('CartQuantityUpdate', {
+            productId: productId,
+            productName: product.name,
+            oldQuantity: oldQuantity,
+            newQuantity: newQuantity,
+            cartValue: calculateCartTotal()
+        });
     } else {
         alert(`Cannot add more. Only ${product.stock} items available.`);
     }
@@ -101,8 +198,22 @@ function updateQuantity(productId, delta) {
 
 // Remove item from cart
 function removeFromCart(productId) {
+    const product = products.find(p => p.id === productId);
+    const item = cart.find(item => item.product_id === productId);
+    
     cart = cart.filter(item => item.product_id !== productId);
     updateCartUI();
+    
+    // Track item removal
+    if (item && product) {
+        trackNewRelicEvent('RemoveFromCart', {
+            productId: productId,
+            productName: product.name,
+            quantity: item.quantity,
+            cartValue: calculateCartTotal(),
+            cartItemCount: cart.length
+        });
+    }
 }
 
 // Update cart UI
@@ -161,6 +272,13 @@ function showCheckoutForm() {
         return;
     }
     
+    // Track checkout initiation
+    trackNewRelicEvent('CheckoutInitiated', {
+        cartValue: calculateCartTotal(),
+        itemCount: cart.length,
+        productIds: cart.map(item => item.product_id).join(',')
+    });
+    
     document.getElementById('checkoutModal').classList.add('active');
     toggleCart(); // Close cart sidebar
 }
@@ -174,6 +292,7 @@ function closeCheckoutForm() {
 async function submitCheckout(event) {
     event.preventDefault();
     
+    const startTime = Date.now();
     const checkoutData = {
         items: cart,
         customer_name: document.getElementById('customerName').value,
@@ -197,6 +316,21 @@ async function submitCheckout(event) {
         }
         
         const order = await response.json();
+        const checkoutTime = Date.now() - startTime;
+        
+        // Track successful order completion
+        trackNewRelicEvent('OrderCompleted', {
+            orderId: order.order_id,
+            orderValue: order.total_amount,
+            itemCount: order.items.length,
+            paymentMethod: order.payment_method,
+            checkoutTime: checkoutTime,
+            customerEmail: order.customer_email
+        });
+        
+        // Set order attributes
+        setNewRelicAttribute('lastOrderId', order.order_id);
+        setNewRelicAttribute('lastOrderValue', order.total_amount);
         
         // Clear cart
         cart = [];
@@ -213,6 +347,15 @@ async function submitCheckout(event) {
         
     } catch (error) {
         console.error('Checkout error:', error);
+        
+        // Track checkout error to New Relic
+        trackNewRelicError(error, {
+            errorType: 'CheckoutError',
+            cartValue: calculateCartTotal(),
+            itemCount: cart.length,
+            paymentMethod: checkoutData.payment_method
+        });
+        
         alert(`Checkout failed: ${error.message}`);
     }
 }
@@ -267,3 +410,21 @@ document.head.appendChild(style);
 
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', init);
+
+// Global error handler for uncaught errors
+window.addEventListener('error', function(event) {
+    trackNewRelicError(event.error || new Error(event.message), {
+        errorType: 'UncaughtError',
+        filename: event.filename,
+        lineno: event.lineno,
+        colno: event.colno
+    });
+});
+
+// Global handler for unhandled promise rejections
+window.addEventListener('unhandledrejection', function(event) {
+    trackNewRelicError(new Error(event.reason), {
+        errorType: 'UnhandledPromiseRejection',
+        reason: String(event.reason)
+    });
+});

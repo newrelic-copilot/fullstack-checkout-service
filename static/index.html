@@ -4,6 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Checkout Service - Shop</title>
+    
+    <!-- New Relic Browser Agent -->
+    <script type="text/javascript">
+        ;(function(window, document) {
+            // New Relic Browser configuration
+            window.NREUM || (NREUM = {});
+            NREUM.init = {
+                distributed_tracing: { enabled: true },
+                privacy: { cookies_enabled: true },
+                ajax: { deny_list: [] }
+            };
+            NREUM.info = {
+                beacon: "bam.nr-data.net",
+                errorBeacon: "bam.nr-data.net",
+                licenseKey: "NRJS-YOUR-LICENSE-KEY-HERE",
+                applicationID: "YOUR-APP-ID-HERE",
+                sa: 1,
+                agent: ""
+            };
+            
+            // Initialize New Relic custom attributes
+            NREUM.setCustomAttribute = NREUM.setCustomAttribute || function(name, value) {
+                if (window.newrelic && window.newrelic.setCustomAttribute) {
+                    window.newrelic.setCustomAttribute(name, value);
+                }
+            };
+        })(window, document);
+    </script>
+    <!-- 
+        To complete New Relic Browser setup:
+        1. Replace 'NRJS-YOUR-LICENSE-KEY-HERE' with your actual New Relic Browser license key
+        2. Replace 'YOUR-APP-ID-HERE' with your actual New Relic application ID
+        3. Add the Browser agent loader script snippet from New Relic UI
+        
+        For production, load the full Browser agent by adding this script after the config:
+        <script type="text/javascript" src="https://js-agent.newrelic.com/nr-loader-spa-current.min.js"></script>
+    -->
+    
     <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
