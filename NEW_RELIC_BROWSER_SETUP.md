@@ -88,6 +88,15 @@ Add this script tag after the NREUM configuration block:
 <script type="text/javascript" src="https://js-agent.newrelic.com/nr-loader-spa-current.min.js"></script>
 ```
 
+**Security Note**: For production environments, consider adding Subresource Integrity (SRI) to verify the script hasn't been tampered with. New Relic provides SRI hashes in their UI when you generate the Browser agent snippet. Example:
+
+```html
+<script type="text/javascript" 
+        src="https://js-agent.newrelic.com/nr-loader-spa-current.min.js"
+        integrity="sha384-HASH-VALUE-HERE"
+        crossorigin="anonymous"></script>
+```
+
 #### Option B: Copy/Paste from New Relic UI
 1. Log in to New Relic One
 2. Go to Browser → Select your application (or create a new one)
