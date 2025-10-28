@@ -11,6 +11,7 @@ A full-stack checkout service application built with Python FastAPI backend and 
 - Order processing and management
 - In-memory data storage with demo products
 - CORS enabled for frontend integration
+- **New Relic APM Monitoring** with distributed tracing and logs in context
 
 ### Frontend (HTML/CSS/JavaScript)
 - Responsive product catalog grid
@@ -51,14 +52,62 @@ cd fullstack-checkout-service
 pip install -r requirements.txt
 ```
 
+3. Configure New Relic (Optional but Recommended):
+
+To enable New Relic APM monitoring, you need to configure your New Relic license key:
+
+a. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+b. Edit `.env` and add your New Relic license key:
+```bash
+NEW_RELIC_LICENSE_KEY=your_license_key_here
+```
+
+You can get your license key from [New Relic API Keys](https://one.newrelic.com/api-keys).
+
+c. (Optional) Customize the application name and environment:
+```bash
+NEW_RELIC_APP_NAME=Fullstack Checkout Service
+NEW_RELIC_ENVIRONMENT=development
+```
+
+If you don't configure New Relic, the application will run normally without monitoring.
+
 ## Running the Application
 
-Start the FastAPI server:
+### Option 1: Run with New Relic monitoring (Recommended)
+
+If you have configured New Relic in the `.env` file:
+
 ```bash
 python main.py
 ```
 
-Or use uvicorn directly:
+The application will automatically initialize New Relic APM and start monitoring your application.
+
+### Option 2: Run without New Relic
+
+If you haven't configured New Relic, the application will still run normally:
+
+```bash
+python main.py
+```
+
+### Option 3: Use uvicorn directly
+```bash
+python main.py
+```
+
+### Option 3: Use uvicorn directly
+
+```bash
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
+```
+
+**Note:** When using uvicorn directly, make sure your environment variables are set first.
 ```bash
 uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
@@ -124,12 +173,62 @@ fullstack-checkout-service/
 - **FastAPI**: Modern, fast web framework for building APIs
 - **Pydantic**: Data validation using Python type annotations
 - **Uvicorn**: ASGI server for running the application
+- **New Relic**: Application Performance Monitoring (APM) with distributed tracing
 
 ### Frontend
 - **HTML5**: Semantic markup
 - **CSS3**: Modern styling with flexbox and grid
 - **Vanilla JavaScript**: No framework dependencies
 - **Fetch API**: For making HTTP requests
+
+## New Relic Monitoring
+
+This application includes New Relic APM integration for comprehensive monitoring:
+
+### Features
+- **Application Performance Monitoring (APM)**: Track response times, throughput, and errors
+- **Distributed Tracing**: Follow requests across your entire stack
+- **Logs in Context**: Automatically correlate logs with transactions
+- **Error Analytics**: Detailed error tracking with stack traces
+- **Custom Attributes**: Request parameters are captured for deeper insights
+- **Transaction Tracing**: Detailed breakdown of slow transactions
+
+### Configuration
+
+The New Relic agent is configured via the `newrelic.ini` file and environment variables:
+
+**Required Environment Variables:**
+- `NEW_RELIC_LICENSE_KEY`: Your New Relic license key (required)
+
+**Optional Environment Variables:**
+- `NEW_RELIC_APP_NAME`: Application name (default: "Fullstack Checkout Service")
+- `NEW_RELIC_ENVIRONMENT`: Environment name (default: "development")
+- `NEW_RELIC_CONFIG_FILE`: Path to config file (default: "newrelic.ini")
+- `NEW_RELIC_LOG`: Log output destination (default: stdout)
+- `NEW_RELIC_LOG_LEVEL`: Logging level (default: "info")
+
+### Viewing Your Data
+
+After starting the application with New Relic configured:
+
+1. Log in to [New Relic One](https://one.newrelic.com)
+2. Navigate to **APM & Services**
+3. Find your application (e.g., "Fullstack Checkout Service")
+4. Explore:
+   - **Summary**: Overview of performance metrics
+   - **Transactions**: Response times for each endpoint
+   - **Errors**: Error rates and details
+   - **Distributed tracing**: Request flows
+   - **Logs**: Application logs in context
+
+### Monitored Endpoints
+
+All API endpoints are automatically instrumented:
+- `GET /api/products` - Product catalog
+- `GET /api/products/{product_id}` - Single product details
+- `POST /api/checkout` - Order processing
+- `GET /api/orders` - All orders
+- `GET /api/orders/{order_id}` - Order details
 
 ## Development
 
