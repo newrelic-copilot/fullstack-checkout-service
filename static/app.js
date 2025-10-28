@@ -48,7 +48,13 @@ async function init() {
 function generateSessionId() {
     let sessionId = sessionStorage.getItem('userSessionId');
     if (!sessionId) {
-        sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        // Use crypto.randomUUID() if available (modern browsers), otherwise fallback to timestamp-based ID
+        if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+            sessionId = 'session_' + crypto.randomUUID();
+        } else {
+            // Fallback for older browsers - just use timestamp
+            sessionId = 'session_' + Date.now() + '_' + Date.now().toString(36);
+        }
         sessionStorage.setItem('userSessionId', sessionId);
     }
     return sessionId;
