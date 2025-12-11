@@ -1,0 +1,41 @@
+name: Deploy and Track
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+      
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      
+      - name: Run basic validation
+        run: |
+          python -c "import main; print('✅ Application imports successfully')"
+          python -c "from models import Product, Order; print('✅ Models validated')"
+      
+      - name: Record deployment
+        uses: newrelic/deployment-marker-action@v2.3.0
+        with:
+          apiKey: ${{ secrets.NEW_RELIC_API_KEY }}
+          guid: ${{ secrets.NEW_RELIC_ENTITY_GUID }}
+          version: ${{ github.sha }}
+          user: ${{ github.actor }}
+          changelog: ${{ github.event.head_commit.message }}

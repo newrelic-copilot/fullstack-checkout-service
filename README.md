@@ -145,6 +145,35 @@ Use the built-in Swagger UI documentation at http://localhost:8000/docs to test 
 - Update `models.py` to add new fields or validation rules
 - Customize the UI by editing files in the `static/` directory
 
+## CI/CD and Deployment Tracking
+
+This repository includes GitHub Actions workflow for automated deployment tracking with New Relic.
+
+### Workflow
+
+The `deploy.yml` workflow:
+- Triggers on pushes to `main` or `master` branches
+- Can be manually triggered via workflow_dispatch
+- Validates the application by installing dependencies and running import checks
+- Records deployments in New Relic for monitoring and analysis
+
+### Required Secrets
+
+To enable deployment tracking, configure the following repository secrets in GitHub:
+
+- **NEW_RELIC_API_KEY**: Your New Relic User API key
+- **NEW_RELIC_ENTITY_GUID**: The GUID of your APM application entity
+
+### Benefits
+
+Deployment tracking provides:
+- Correlation between deployments and performance changes
+- Faster mean time to resolution (MTTR) when issues arise
+- Deployment frequency and success rate metrics
+- Historical deployment timeline in New Relic dashboards
+
+For more information, see the [New Relic Deployment Tracking documentation](https://docs.newrelic.com/docs/apm/new-relic-apm/maintenance/record-monitor-deployments/).
+
 ## License
 
 This is a demo application for educational purposes.
