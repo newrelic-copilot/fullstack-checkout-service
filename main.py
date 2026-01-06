@@ -2,10 +2,14 @@ import os
 import newrelic.agent
 
 # Initialize New Relic agent
-newrelic.agent.initialize(
-    config_file='newrelic.ini',
-    environment=os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
-)
+try:
+    newrelic.agent.initialize(
+        config_file='newrelic.ini',
+        environment=os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
+    )
+except Exception as e:
+    # Log warning but don't crash if New Relic fails to initialize
+    print(f"Warning: Failed to initialize New Relic agent: {e}")
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
@@ -66,7 +70,7 @@ async def checkout(checkout_request: CheckoutRequest):
     """Process a checkout request and create an order"""
     
     # Add custom attributes to New Relic transaction
-    newrelic.agent.add_custom_attribute('customer_email', checkout_request.customer_email)
+    # Note: Avoiding PII - using payment method and cart metrics only
     newrelic.agent.add_custom_attribute('payment_method', checkout_request.payment_method)
     newrelic.agent.add_custom_attribute('cart_items_count', len(checkout_request.items))
     
