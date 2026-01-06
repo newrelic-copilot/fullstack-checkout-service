@@ -51,6 +51,15 @@ cd fullstack-checkout-service
 pip install -r requirements.txt
 ```
 
+3. (Optional) Configure New Relic monitoring:
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit .env and add your New Relic license key
+# Get your license key from: https://one.newrelic.com/admin-portal/api-keys/home
+```
+
 ## Running the Application
 
 Start the FastAPI server:
@@ -124,12 +133,61 @@ fullstack-checkout-service/
 - **FastAPI**: Modern, fast web framework for building APIs
 - **Pydantic**: Data validation using Python type annotations
 - **Uvicorn**: ASGI server for running the application
+- **New Relic**: Application performance monitoring (APM) and observability
 
 ### Frontend
 - **HTML5**: Semantic markup
 - **CSS3**: Modern styling with flexbox and grid
 - **Vanilla JavaScript**: No framework dependencies
 - **Fetch API**: For making HTTP requests
+
+## Monitoring
+
+This application includes New Relic monitoring for enhanced observability and performance tracking.
+
+### New Relic Setup
+
+1. **Install the New Relic Python agent** (already included in `requirements.txt`):
+   ```bash
+   pip install newrelic
+   ```
+
+2. **Set up environment variables**:
+   ```bash
+   # Copy the example environment file
+   cp .env.example .env
+   
+   # Edit .env and add your New Relic credentials
+   export NEW_RELIC_LICENSE_KEY="your_license_key_here"
+   export NEW_RELIC_APP_NAME="fullstack-checkout-service"
+   ```
+
+3. **Get your New Relic license key**:
+   - Log in to your New Relic account
+   - Visit: https://one.newrelic.com/admin-portal/api-keys/home
+   - Copy your license key
+
+4. **Run the application**: The New Relic agent will automatically initialize when the application starts (if configured).
+
+### Features Enabled
+
+- **Application Performance Monitoring (APM)**: Track response times, throughput, and errors
+- **Distributed Tracing**: Follow requests across services
+- **Error Tracking**: Automatic capture of exceptions and errors
+- **Transaction Traces**: Detailed breakdowns of slow requests
+- **Custom Attributes**: Business context for better insights
+
+### Viewing Metrics
+
+Once configured, you can view your application metrics at:
+- https://one.newrelic.com/
+
+Navigate to **APM & Services** → **fullstack-checkout-service** to see:
+- Response times and throughput
+- Error rates and exceptions
+- Database query performance
+- Transaction traces
+- Service maps and dependencies
 
 ## Development
 
