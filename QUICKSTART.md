@@ -8,7 +8,21 @@ Get started with the Checkout Service in 3 simple steps!
 pip install -r requirements.txt
 ```
 
-## Step 2: Start the Server
+## Step 2: Configure New Relic (Optional)
+
+Set up monitoring by configuring environment variables:
+
+```bash
+export NEW_RELIC_LICENSE_KEY="your_license_key"
+export NEW_RELIC_APP_NAME="fullstack-checkout-service"
+export NEW_RELIC_ENVIRONMENT="development"
+```
+
+Get your license key from [New Relic API Keys](https://one.newrelic.com/launcher/api-keys-ui.api-keys-launcher).
+
+**Note:** The application will run without New Relic configuration, but monitoring features will be disabled.
+
+## Step 3: Start the Server
 
 ```bash
 python main.py
@@ -19,7 +33,7 @@ You should see:
 INFO:     Uvicorn running on http://0.0.0.0:8000
 ```
 
-## Step 3: Open the Application
+## Step 4: Open the Application
 
 Open your web browser and navigate to:
 - **Shop**: http://localhost:8000/shop

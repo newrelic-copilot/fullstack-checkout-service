@@ -1,3 +1,12 @@
+import os
+import newrelic.agent
+
+# Initialize New Relic agent
+newrelic.agent.initialize(
+    config_file='newrelic.ini',
+    environment=os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
+)
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -56,6 +65,11 @@ async def get_product(product_id: int):
 async def checkout(checkout_request: CheckoutRequest):
     """Process a checkout request and create an order"""
     
+    # Add custom attributes to New Relic transaction
+    newrelic.agent.add_custom_attribute('customer_email', checkout_request.customer_email)
+    newrelic.agent.add_custom_attribute('payment_method', checkout_request.payment_method)
+    newrelic.agent.add_custom_attribute('cart_items_count', len(checkout_request.items))
+    
     if not checkout_request.items:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -113,6 +127,11 @@ async def checkout(checkout_request: CheckoutRequest):
     # Store order
     orders_db[order_id] = order
     
+    # Add custom attributes about the completed order
+    newrelic.agent.add_custom_attribute('order_id', order_id)
+    newrelic.agent.add_custom_attribute('order_total', order.total_amount)
+    newrelic.agent.add_custom_attribute('order_status', order.status.value)
+    
     return order
 
 
@@ -125,6 +144,12 @@ async def get_order(order_id: str):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"Order with ID {order_id} not found"
         )
+    
+    # Add custom attributes to New Relic transaction
+    newrelic.agent.add_custom_attribute('order_id', order_id)
+    newrelic.agent.add_custom_attribute('order_total', order.total_amount)
+    newrelic.agent.add_custom_attribute('order_status', order.status.value)
+    
     return order
 
 
