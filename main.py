@@ -75,7 +75,7 @@ async def checkout(checkout_request: CheckoutRequest):
         newrelic.agent.add_custom_attribute('customer_email', checkout_request.customer_email)
         newrelic.agent.add_custom_attribute('payment_method', checkout_request.payment_method)
         newrelic.agent.add_custom_attribute('item_count', len(checkout_request.items))
-    except:
+    except Exception:
         pass  # Fail silently if New Relic is not initialized
     
     if not checkout_request.items:
@@ -146,7 +146,7 @@ async def checkout(checkout_request: CheckoutRequest):
             'customerEmail': checkout_request.customer_email,
             'paymentMethod': checkout_request.payment_method
         })
-    except:
+    except Exception:
         pass  # Fail silently if New Relic is not initialized
     
     return order
