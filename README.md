@@ -2,6 +2,8 @@
 
 A full-stack checkout service application built with Python FastAPI backend and vanilla JavaScript frontend. This demo application provides basic e-commerce functionality including product catalog, shopping cart, and checkout flow.
 
+**🆕 Now with New Relic APM monitoring for performance insights and business analytics!**
+
 ## Features
 
 ### Backend (FastAPI)
@@ -11,6 +13,7 @@ A full-stack checkout service application built with Python FastAPI backend and 
 - Order processing and management
 - In-memory data storage with demo products
 - CORS enabled for frontend integration
+- **New Relic APM integration** for monitoring and observability
 
 ### Frontend (HTML/CSS/JavaScript)
 - Responsive product catalog grid
@@ -50,6 +53,14 @@ cd fullstack-checkout-service
 ```bash
 pip install -r requirements.txt
 ```
+
+3. (Optional) Configure New Relic monitoring:
+```bash
+export NEW_RELIC_LICENSE_KEY="your_license_key_here"
+export NEW_RELIC_APP_NAME="Fullstack Checkout Service"
+```
+
+See [NEWRELIC_SETUP.md](NEWRELIC_SETUP.md) for detailed monitoring setup instructions.
 
 ## Running the Application
 
@@ -124,6 +135,7 @@ fullstack-checkout-service/
 - **FastAPI**: Modern, fast web framework for building APIs
 - **Pydantic**: Data validation using Python type annotations
 - **Uvicorn**: ASGI server for running the application
+- **New Relic**: Application performance monitoring and observability
 
 ### Frontend
 - **HTML5**: Semantic markup
@@ -144,6 +156,16 @@ Use the built-in Swagger UI documentation at http://localhost:8000/docs to test 
 - Modify `demo_data.py` to change or add products
 - Update `models.py` to add new fields or validation rules
 - Customize the UI by editing files in the `static/` directory
+
+## Monitoring and Observability
+
+This application is instrumented with New Relic for comprehensive monitoring:
+- **Performance Monitoring**: Track response times and throughput
+- **Error Tracking**: Automatic exception capture and reporting
+- **Custom Business Metrics**: Order completion tracking, revenue analytics
+- **Distributed Tracing**: Follow requests through the system
+
+For setup instructions, see [NEWRELIC_SETUP.md](NEWRELIC_SETUP.md).
 
 ## License
 

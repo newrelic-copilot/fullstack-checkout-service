@@ -1,3 +1,17 @@
+import os
+import newrelic.agent
+
+# Initialize New Relic agent before any other imports
+# Configuration can be provided via environment variables or newrelic.ini
+config_file = os.environ.get('NEW_RELIC_CONFIG_FILE', 'newrelic.ini')
+environment = os.environ.get('NEW_RELIC_ENVIRONMENT', 'development')
+
+if os.path.exists(config_file):
+    newrelic.agent.initialize(config_file, environment)
+elif os.environ.get('NEW_RELIC_LICENSE_KEY'):
+    # Initialize with environment variables if config file doesn't exist
+    newrelic.agent.initialize()
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -56,6 +70,14 @@ async def get_product(product_id: int):
 async def checkout(checkout_request: CheckoutRequest):
     """Process a checkout request and create an order"""
     
+    # Add custom New Relic attributes for business context
+    try:
+        newrelic.agent.add_custom_attribute('customer_email', checkout_request.customer_email)
+        newrelic.agent.add_custom_attribute('payment_method', checkout_request.payment_method)
+        newrelic.agent.add_custom_attribute('item_count', len(checkout_request.items))
+    except:
+        pass  # Fail silently if New Relic is not initialized
+    
     if not checkout_request.items:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
@@ -112,6 +134,20 @@ async def checkout(checkout_request: CheckoutRequest):
     
     # Store order
     orders_db[order_id] = order
+    
+    # Add custom New Relic attributes for completed order
+    try:
+        newrelic.agent.add_custom_attribute('order_id', order_id)
+        newrelic.agent.add_custom_attribute('order_total', total_amount)
+        newrelic.agent.record_custom_event('OrderCompleted', {
+            'orderId': order_id,
+            'totalAmount': total_amount,
+            'itemCount': len(order_items),
+            'customerEmail': checkout_request.customer_email,
+            'paymentMethod': checkout_request.payment_method
+        })
+    except:
+        pass  # Fail silently if New Relic is not initialized
     
     return order
 
