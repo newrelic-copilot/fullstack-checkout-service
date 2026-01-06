@@ -1,3 +1,13 @@
+# Initialize New Relic agent - must be first import
+import os
+try:
+    import newrelic.agent
+    newrelic_config = os.getenv('NEW_RELIC_CONFIG_FILE', 'newrelic.ini')
+    if os.path.exists(newrelic_config):
+        newrelic.agent.initialize(newrelic_config)
+except ImportError:
+    pass  # New Relic not installed
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
