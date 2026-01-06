@@ -3,8 +3,9 @@ import os
 try:
     import newrelic.agent
     newrelic_config = os.getenv('NEW_RELIC_CONFIG_FILE', 'newrelic.ini')
+    newrelic_env = os.getenv('NEW_RELIC_ENVIRONMENT', 'production')
     if os.path.exists(newrelic_config):
-        newrelic.agent.initialize(newrelic_config)
+        newrelic.agent.initialize(newrelic_config, environment=newrelic_env)
 except ImportError:
     pass  # New Relic not installed
 
