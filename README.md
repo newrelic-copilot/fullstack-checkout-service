@@ -11,6 +11,7 @@ A full-stack checkout service application built with Python FastAPI backend and 
 - Order processing and management
 - In-memory data storage with demo products
 - CORS enabled for frontend integration
+- **New Relic APM monitoring and distributed tracing**
 
 ### Frontend (HTML/CSS/JavaScript)
 - Responsive product catalog grid
@@ -19,6 +20,37 @@ A full-stack checkout service application built with Python FastAPI backend and 
 - Order confirmation display
 - Modern UI with gradient themes
 - Mobile-friendly design
+
+## Monitoring
+
+This application is instrumented with New Relic for application performance monitoring (APM), error tracking, and distributed tracing.
+
+### New Relic Configuration
+
+To enable New Relic monitoring:
+
+1. Copy the example environment file:
+```bash
+cp .env.example .env
+```
+
+2. Edit `.env` and add your New Relic credentials:
+```bash
+NEW_RELIC_LICENSE_KEY=your_license_key_here
+NEW_RELIC_APP_NAME=fullstack-checkout-service
+NEW_RELIC_ENVIRONMENT=development
+```
+
+3. Get your license key from [New Relic API Keys](https://one.newrelic.com/admin-portal/api-keys/home)
+
+The New Relic agent will automatically:
+- Track API endpoint performance
+- Monitor database and external service calls
+- Capture errors and exceptions
+- Enable distributed tracing across services
+- Collect custom business metrics
+
+For more details, see the [New Relic Python Agent documentation](https://docs.newrelic.com/docs/apm/agents/python-agent/).
 
 ## Demo Products
 

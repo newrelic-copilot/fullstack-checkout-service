@@ -8,7 +8,22 @@ Get started with the Checkout Service in 3 simple steps!
 pip install -r requirements.txt
 ```
 
-## Step 2: Start the Server
+## Step 2: Configure New Relic (Optional)
+
+To enable New Relic monitoring:
+
+```bash
+# Copy the example environment file
+cp .env.example .env
+
+# Edit .env and add your New Relic license key
+# NEW_RELIC_LICENSE_KEY=your_license_key_here
+# NEW_RELIC_APP_NAME=fullstack-checkout-service
+```
+
+If you don't configure New Relic, the application will still run normally with a warning message.
+
+## Step 3: Start the Server
 
 ```bash
 python main.py

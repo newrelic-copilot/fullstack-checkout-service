@@ -1,3 +1,40 @@
+import os
+import logging
+from pathlib import Path
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+
+# Initialize New Relic agent - must be first import
+try:
+    import newrelic.agent
+    
+    # Get New Relic configuration from environment variables
+    license_key = os.getenv('NEW_RELIC_LICENSE_KEY')
+    app_name = os.getenv('NEW_RELIC_APP_NAME', 'fullstack-checkout-service')
+    environment = os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
+    
+    if license_key:
+        # Get absolute path to config file
+        config_file = Path(__file__).parent / 'newrelic.ini'
+        
+        # Initialize with environment variables
+        newrelic.agent.initialize(
+            str(config_file),
+            environment=environment,
+            log_file=os.getenv('NEW_RELIC_LOG'),
+            log_level=os.getenv('NEW_RELIC_LOG_LEVEL', 'info'),
+        )
+        logger.info(f"New Relic agent initialized successfully (app: {app_name}, env: {environment})")
+    else:
+        logger.warning("NEW_RELIC_LICENSE_KEY not set. New Relic monitoring disabled.")
+        
+except ImportError:
+    logger.warning("New Relic package not installed. Monitoring disabled.")
+except Exception as e:
+    logger.warning(f"New Relic agent initialization failed: {e}. Continuing without monitoring.")
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
