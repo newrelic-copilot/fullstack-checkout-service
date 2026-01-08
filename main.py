@@ -1,4 +1,9 @@
 import os
+import logging
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # Initialize New Relic agent - must be first import
 try:
@@ -7,9 +12,11 @@ try:
         config_file='newrelic.ini',
         environment=os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
     )
+    logger.info("New Relic agent initialized successfully")
+except ImportError:
+    logger.warning("New Relic package not installed. Monitoring disabled.")
 except Exception as e:
-    # Log warning but continue if New Relic is not configured
-    print(f"Warning: New Relic agent not initialized: {e}")
+    logger.warning(f"New Relic agent initialization failed: {e}. Continuing without monitoring.")
 
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
