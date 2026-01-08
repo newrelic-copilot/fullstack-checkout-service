@@ -8,11 +8,24 @@ logger = logging.getLogger(__name__)
 # Initialize New Relic agent - must be first import
 try:
     import newrelic.agent
-    newrelic.agent.initialize(
-        config_file='newrelic.ini',
-        environment=os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
-    )
-    logger.info("New Relic agent initialized successfully")
+    
+    # Get New Relic configuration from environment variables
+    license_key = os.getenv('NEW_RELIC_LICENSE_KEY')
+    app_name = os.getenv('NEW_RELIC_APP_NAME', 'fullstack-checkout-service')
+    environment = os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
+    
+    if license_key:
+        # Initialize with environment variables
+        newrelic.agent.initialize(
+            config_file='newrelic.ini',
+            environment=environment,
+            log_file=os.getenv('NEW_RELIC_LOG'),
+            log_level=os.getenv('NEW_RELIC_LOG_LEVEL', 'info'),
+        )
+        logger.info(f"New Relic agent initialized successfully for app: {app_name}")
+    else:
+        logger.warning("NEW_RELIC_LICENSE_KEY not set. New Relic monitoring disabled.")
+        
 except ImportError:
     logger.warning("New Relic package not installed. Monitoring disabled.")
 except Exception as e:
