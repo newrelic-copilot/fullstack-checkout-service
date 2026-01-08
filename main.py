@@ -1,3 +1,16 @@
+import os
+
+# Initialize New Relic agent - must be first import
+try:
+    import newrelic.agent
+    newrelic.agent.initialize(
+        config_file='newrelic.ini',
+        environment=os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
+    )
+except Exception as e:
+    # Log warning but continue if New Relic is not configured
+    print(f"Warning: New Relic agent not initialized: {e}")
+
 from fastapi import FastAPI, HTTPException, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
