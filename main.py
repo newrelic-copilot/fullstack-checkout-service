@@ -1,5 +1,6 @@
 import os
 import logging
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -15,14 +16,17 @@ try:
     environment = os.getenv('NEW_RELIC_ENVIRONMENT', 'development')
     
     if license_key:
+        # Get absolute path to config file
+        config_file = Path(__file__).parent / 'newrelic.ini'
+        
         # Initialize with environment variables
         newrelic.agent.initialize(
-            config_file='newrelic.ini',
+            str(config_file),
             environment=environment,
             log_file=os.getenv('NEW_RELIC_LOG'),
             log_level=os.getenv('NEW_RELIC_LOG_LEVEL', 'info'),
         )
-        logger.info(f"New Relic agent initialized successfully for app: {app_name}")
+        logger.info(f"New Relic agent initialized successfully (app: {app_name}, env: {environment})")
     else:
         logger.warning("NEW_RELIC_LICENSE_KEY not set. New Relic monitoring disabled.")
         
